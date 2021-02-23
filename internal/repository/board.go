@@ -23,6 +23,12 @@ func (repo *repository) GetBoardTreasureRecords(_ context.Context, boardID strin
 	return repo.db.ReadBoardTreasureRecordsFile(boardID, treasureIDs)
 }
 
+// TODO: wait go-bbs implement, not sure what result will return
+func (repo *repository) AddBoardArticle(_ context.Context, boardID, article string) error {
+	logger.Debugf("add article: %d, board: %v", boardID, article)
+	return nil
+}
+
 func loadBoardFile(db *bbs.DB) ([]bbs.BoardRecord, error) {
 	boardRecords, err := db.ReadBoardRecords()
 	if err != nil {

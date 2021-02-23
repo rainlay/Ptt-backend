@@ -24,6 +24,8 @@ type Repository interface {
 	GetBoardArticleRecords(ctx context.Context, boardID string) ([]bbs.ArticleRecord, error)
 	// GetBoardTreasureRecords returns treasure article records of a board
 	GetBoardTreasureRecords(ctx context.Context, boardID string, treasureIDs []string) ([]bbs.ArticleRecord, error)
+	// AddBoardArticle TODO: wait go-bbs implement, not sure what result will return
+	AddBoardArticle(ctx context.Context, boardID, article string) error
 
 	// user.go
 	// GetUsers returns all user reords
