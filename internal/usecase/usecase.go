@@ -34,6 +34,9 @@ type Usecase interface {
 	GetBoardArticle(ctx context.Context, boardID, filename string) ([]byte, error)
 	// GetBoardTreasures returns treasures of a board
 	GetBoardTreasures(ctx context.Context, boardID string, treasuresID []string) []interface{} // FIXME: use concrete type rather than []interface{}
+	// AddBoardArticle add new article of a board
+	// TODO(TBD): 搬到 Article
+	AddBoardArticle(ctx context.Context, userId, boardID, title, article, ip string) (*ArticleParsedRsp, error)
 
 	// token.go
 	// CreateAccessTokenWithUsername creates access token for a user

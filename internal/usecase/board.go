@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/PichuChen/go-bbs"
 )
@@ -151,6 +152,90 @@ func (usecase *usecase) GetBoardTreasures(ctx context.Context, boardID string, t
 func (usecase *usecase) shouldShowOnUserLevel(board bbs.BoardRecord, userID string) bool {
 	// TODO: Get user Level
 	return true
+}
+
+type SenderInfo struct {
+	Site      string
+	IPAddress string
+	IPCountry string
+}
+
+type ArticleTextMap struct {
+	Text     string `json:"text"`
+	ColorMap string `json:"color_map"`
+}
+
+type Signature struct {
+	Text     string `json:"text"`
+	ColorMap string `json:"color_map"`
+}
+
+type PushRecords struct {
+	Type      string    `json:"type"`
+	ID        string    `json:"id"`
+	IpAddress string    `json:"ip_address"`
+	Text      string    `json:"text"`
+	Time      time.Time `json:"time"`
+}
+
+type ArticleParsedRsp struct {
+	IsHeaderModified bool           `json:"is_header_modified"`
+	AuthorID         string         `json:"author_id"`
+	AuthorName       string         `json:"author_name"`
+	Title            string         `json:"title"`
+	PostTime         time.Time      `json:"post_time"`
+	BoardName        string         `json:"board_name"`
+	Text             ArticleTextMap `json:"text"`
+	Signature        Signature      `json:"signature"`
+	SenderInfo       SenderInfo     `json:"sender_info"`
+	EditRecords      []string       `json:"edit_records"`
+	PushRecords      []PushRecords  `json:"push_records"`
+}
+
+// TODO: Wait go-bbs implement add article feature
+func (usecase *usecase) AddBoardArticle(ctx context.Context, userId, boardID, title, article, ip string) (*ArticleParsedRsp, error) {
+	var err error
+
+	usr, err := usecase.GetUserByID(ctx, userId)
+	if err != nil {
+		return nil, err
+	}
+
+	bo, err := usecase.GetBoardByID(ctx, boardID)
+	if err != nil {
+		return nil, err
+	}
+
+	// TODO: Get user's signature method need to be implement
+	sign := Signature{}
+
+	// TODO: TBD SITE, IP Country
+	textMap := ArticleTextMap{
+		Text:     article,
+		ColorMap: "",
+	}
+
+	senderInfo := SenderInfo{
+		Site:      "",
+		IPAddress: ip,
+		IPCountry: "",
+	}
+
+	rsp := ArticleParsedRsp{
+		IsHeaderModified: false,
+		AuthorID:         usr.UserId(),
+		AuthorName:       usr.Nickname(),
+		Title:            title,
+		PostTime:         time.Now(),
+		BoardName:        bo.Title(),
+		Text:             textMap,
+		Signature:        sign,
+		SenderInfo:       senderInfo,
+		EditRecords:      nil,
+		PushRecords:      nil,
+	}
+
+	return &rsp, nil
 }
 
 func getArticleURL(boardId string, filename string) string {

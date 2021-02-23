@@ -45,6 +45,10 @@ func (repo *MockRepository) GetBoardTreasureRecords(ctx context.Context, boardID
 	return []bbs.ArticleRecord{}, nil
 }
 
+func (repo *MockRepository) AddBoardArticle(ctx context.Context, userId, boardID, title, article, ip string) (*ArticleParsedRsp, error) {
+	return nil, nil
+}
+
 type MockArticleRecord struct {
 	filename       string
 	modified       time.Time
